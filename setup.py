@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
-descr = "Agente AI per analizzare file pom.xml con scraping, parsing e graph analytics"
+descr = "Agente AI per analizzare una pagina web Eventbrite, oppure elaborare un file event.html con scraping, parsing."
 author_name = "Alessandro Brillante"
 
 setup(
-    name="pom-agent",
+    name="eventbrite-agent",
     version="0.1.0",
     packages=find_packages(where="."),
     install_requires=[

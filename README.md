@@ -8,40 +8,41 @@ Un MVP Python per l’analisi e l’esplorazione delle dipendenze Maven di un pr
 
 ## 📁 Struttura del progetto
 
-Organizziamo il codice in un package principale `pom_agent` e uno script CLI in `cli.py`.
+Organizziamo il codice in un package principale `eventbrite_agent` e uno script CLI in `cli.py`.
 
 ```
 .
-├── pom_agent/                # Modulo principale
+├── tf_event_agent/             # Modulo principale
 │   ├── __init__.py
-│   ├── config.py             # costanti, logging centralizzato, utilità JSON
-│   ├── pomxml_extractor.py   # parse_pom_file: parsing POM
-│   ├── agent_functions.py    # implementazione funzioni callable (parse, read, write, load_json)
-│   ├── functions.py          # schema JSON per le funzioni GPT
-│   ├── gpt_wrap.py           # wrapper OpenAI Chat API
-│   ├── interactive_agent.py  # classe PomAgent + run_pom_agent()
-│   └── graph_util.py         # funzioni per costruire e interrogare grafo di dipendenze
+│   ├── config.py               # costanti, logging centralizzato, utilità JSON
+│   ├── html_extractor.py       # parse_html_file: parsing HTML
+│   ├── agent_functions.py      # implementazione funzioni callable (parse, read, write, load_json)
+│   ├── functions.py            # schema JSON per le funzioni GPT
+│   ├── gpt_wrap.py             # wrapper OpenAI Chat API
+│   ├── interactive_agent.py    # classe EventBriteAgent + run_eventbrite_agent()
+│   └── eventbrite_wrapper.py   # funzioni per costruire e interrogare grafo di dipendenze
 ├── resources/
-│   └── pom.xml               # file POM di esempio
-├── cli.py                    # interfaccia a menu per l’agente
-├── run_agent.py              # entrypoint semplice
-├── setup.py                  # configurazione pip install
-├── Makefile                  # comandi utili
-└── requirements.txt          # dipendenze
+│   └── event.html              # file HTML di esempio
+├── cli.py                      # interfaccia a menu per l’agente
+├── run_agent.py                # entrypoint semplice
+├── setup.py                    # configurazione pip install
+├── Makefile                    # comandi utili
+└── requirements.txt            # dipendenze
 ```
 
-> Il codice sorgente principale è in `pom_agent/`, per facilitare estensioni e test.
+> Il codice sorgente principale è in `tf_event_agent/`, per facilitare estensioni e test.
 
 ---
 
 ## 🚀 Funzionalità core
 
-1. **Parsing POM** (`pom_agent.pomxml_extractor.parse_pom_file`)
+1. **Parsing HTML** (`event_agent.html_extractor.parse_html_file`)
 
    * Estrae `groupId`, `artifactId`, `version`, `packaging` e dipendenze.
-2. **Salvataggio JSON** (`pom_agent.agent_functions.write_file`)
 
-   * Produce `pom_info.json` con struttura:
+2. **Salvataggio JSON** (`event_agent.agent_functions.write_file`)
+
+   * Produce `event_info.json` con struttura:
 
      ```json
      {
@@ -49,13 +50,13 @@ Organizziamo il codice in un package principale `pom_agent` e uno script CLI in 
        "dependencies": [{...}, ...]
      }
      ```
-3. **Chat interattiva GPT** (`pom_agent.interactive_agent.PomAgent`)
+3. **Chat interattiva GPT** (`event_agent.interactive_agent.EventbriteAgent`)
 
-   * Domande sul POM via function calling (parse, read, write, load\_json).
+   * Domande sull'HTML via function calling (parse, read, write, load\_json).
 4. **CLI/Menu** (`cli.py`)
 
    * Menu numerato con domande predefinite e supporto custom.
-5. **Grafo delle dipendenze** (`pom_agent.graph_util`)
+5. **Grafo delle dipendenze** (`event_agent.graph_util`)
 
    * Utilizza `networkx` per creare un DiGraph di project→dependency.
    * Query: cammini, cicli, filtri per scope.
@@ -76,29 +77,29 @@ make install
 
 ## 📋 Comandi principali
 
-| Comando         | Descrizione                                               |
-| --------------- | --------------------------------------------------------- |
-| `make install`  | Installa il progetto in modalità editable                 |
-| `make run`      | Avvia sessione interattiva (equiv. `python run_agent.py`) |
-| `make cli`      | Avvia menu CLI (`python cli.py`)                          |
-| `pom-agent`     | Entry point interattivo (via console\_scripts)            |
-| `pom-agent-cli` | Menu CLI (via console\_scripts)                           |
+| Comando           | Descrizione                                               |
+|-------------------| --------------------------------------------------------- |
+| `make install`    | Installa il progetto in modalità editable                 |
+| `make run`        | Avvia sessione interattiva (equiv. `python run_agent.py`) |
+| `make cli`        | Avvia menu CLI (`python cli.py`)                          |
+| `event-agent`     | Entry point interattivo (via console\_scripts)            |
+| `event-agent-cli` | Menu CLI (via console\_scripts)                           |
 
 ---
 
 ## 🛠️ Config & Logging
 
-* `pom_agent.config.setup_logging(level)` imposta il root logger.
-* Costanti in `pom_agent.config`:
+* `event_agent.config.setup_logging(level)` imposta il root logger.
+* Costanti in `event_agent.config`:
 
-  * `POM_FILE`, `TXT_REPORT`, `RECIPIENTS`, `NVD_URL`.
+  * `HTML_FILE`, `TXT_REPORT`, `RECIPIENTS`, `NVD_URL`.
   * Namespace Maven per `ElementTree`.
 
 ---
 
 ## ⚙️ Funzioni callable GPT
 
-* `parse_pom_file(pom_path: str) -> dict`
+* `parse_html_file(html_path: str) -> dict`
 * `read_file(path: str) -> str`
 * `write_file(path: str, content: str) -> dict`
 * `load_json(path: str) -> dict`
@@ -107,7 +108,7 @@ make install
 
 ## 📈 Grafo delle Dipendenze
 
-Modulo di utilità (`pom_agent.graph_util`):
+Modulo di utilità (`event_agent.graph_util`):
 
 ```python
 from networkx import DiGraph

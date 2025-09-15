@@ -1,4 +1,5 @@
 """GPT functions module."""
+
 dct_fn_read_file = {
     "name": "read_file",
     "description": "Legge il contenuto di un file.",
@@ -24,18 +25,18 @@ dct_fn_write_file = {
     }
 }
 
-dct_fn_parse_pom = {
-    "name": "parse_pom_file",
-    "description": "Legge un pom.xml, estrae informazioni e restituisce una struttura JSON.",
+dct_fn_parse_html_file = {
+    "name": "parse_html_file",
+    "description": "Legge un event.html, estrae informazioni e restituisce una struttura JSON.",
     "parameters": {
         "type": "object",
         "properties": {
             "pom_path": {
                 "type": "string",
-                "description": "Percorso al file pom.xml"
+                "description": "Percorso al file event.html"
             }
         },
-        "required": ["pom_path"]
+        "required": ["html_path"]
     }
 }
 
@@ -54,9 +55,38 @@ dct_fn_load_json = {
     }
 }
 
+
+dct_fn_write_json = {
+    "name": "write_json",
+    "description": "Salva dati JSON su file.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "path": {"type": "string", "description": "Percorso file di destinazione."},
+            "content": {"type": "object", "description": "Contenuto JSON da scrivere."}
+        },
+        "required": ["path", "content"]
+    }
+}
+
+
+dct_fn_fetch_event_from_url = {
+    "name": "fetch_event_from_url",
+    "description": "Recupera informazioni di un evento Eventbrite usando l'URL.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "event_id": {"type": "string", "description": "URL dell'evento su Eventbrite."}
+        },
+        "required": ["url"]
+    }
+}
+
 FUNCTIONS = [
     dct_fn_read_file,
     dct_fn_write_file,
-    dct_fn_parse_pom,
-    dct_fn_load_json
+    dct_fn_fetch_event_from_url,
+    dct_fn_load_json,
+    dct_fn_write_json,
+    dct_fn_parse_html_file,
 ]
