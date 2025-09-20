@@ -106,24 +106,6 @@ make install
 
 ---
 
-## 📈 Grafo delle Dipendenze
-
-Modulo di utilità (`event_agent.graph_util`):
-
-```python
-from networkx import DiGraph
-
-def build_dependency_graph(data: dict) -> DiGraph:
-    g = DiGraph()
-    project = data['project']['artifactId']
-    g.add_node(project, **data['project'])
-    for dep in data['dependencies']:
-        key = dep['artifactId']
-        g.add_node(key, **dep)
-        g.add_edge(project, key, scope=dep['scope'])
-    return g
-```
-
 **Esempi di interrogazione**:
 
 * `list(g.successors(project))`
@@ -134,9 +116,17 @@ def build_dependency_graph(data: dict) -> DiGraph:
 
 ## 🔮 Next Steps
 
-1. **CVE-check**: integrazione NVD per versioni vulnerabili.
-2. **Multi-modulo**: supporto a progetti Maven multi-module.
-3. **Esportazione**: GraphViz, YAML, Dashboard web.
-4. **AI Enrichment**: spiegazioni e raccomandazioni LLM.
+* Puoi **sostituire i mock con API reali**:
 
-**Buon lavoro!**
+  * ✈️ **Voli/treni:** Skyscanner API, Amadeus Travel API, o Trenitalia/Italo feed.
+  * 🏨 **Hotel:** Booking.com API, Expedia API.
+  * 🌤 **Meteo:** OpenWeatherMap API o Meteo.it.
+  * 🎭 **Eventi:** Ticketmaster API, Eventbrite API.
+
+* Potresti anche aggiungere **logica di ranking** (es. ordinare per prezzo, rating, distanza).
+
+* Aggiungere **cache** per evitare richieste ripetute.
+
+---
+
+Vuoi che ti scriva anche un esempio di `functions.py` con lo **schema JSON per ogni funzione**, così GPT può generare chiamate automatiche usando i parametri corretti?

@@ -3,7 +3,7 @@ import logging
 import sys
 
 # Eventbrite API token
-EVENTBRITE_TOKEN = "INSERISCI_IL_TUO_TOKEN"
+EVENTBRITE_TOKEN = "VFRIC7C7O57WTRNPWFGE"
 
 
 def setup_logging(level=logging.INFO):

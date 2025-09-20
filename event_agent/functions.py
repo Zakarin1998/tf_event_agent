@@ -82,11 +82,73 @@ dct_fn_fetch_event_from_url = {
     }
 }
 
+# MOCK DELLE FUNZIONI: search-flights , search-hotels, search-events
+dct_fn_search_flights = {
+    "name": "search_flights",
+    "description": "Trova voli o treni per la tratta specificata",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "origin": {"type": "string", "description": "Città di partenza"},
+            "destination": {"type": "string", "description": "Città di arrivo"},
+            "date": {"type": "string", "description": "Data di partenza (YYYY-MM-DD)"}
+        },
+        "required": ["origin", "destination", "date"]
+    }
+}
+
+dct_fn_search_hotels = {
+    "name": "search_hotels",
+    "description": "Trova hotel disponibili nella città e periodo indicato",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "city": {"type": "string", "description": "Città di destinazione"},
+            "checkin": {"type": "string", "description": "Data check-in (YYYY-MM-DD)"},
+            "checkout": {"type": "string", "description": "Data check-out (YYYY-MM-DD)"}
+        },
+        "required": ["city", "checkin", "checkout"]
+    }
+}
+
+dct_fn_search_events = {
+    "name": "search_events",
+    "description": "Cerca eventi nella città in una data specifica",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "city": {"type": "string", "description": "Città di destinazione"},
+            "date": {"type": "string", "description": "Data in formato YYYY-MM-DD"}
+        },
+        "required": ["city", "date"]
+    }
+}
+
+dct_fn_get_weather_forecast = {
+    "name": "get_weather_forecast",
+    "description": "Recupera previsioni del tempo per una città e data",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "city": {"type": "string", "description": "Città di interesse"},
+            "date": {"type": "string", "description": "Data in formato YYYY-MM-DD"}
+        },
+        "required": ["city", "date"]
+    }
+}
+
+
 FUNCTIONS = [
+    # Funzioni file I/O che già avevi
     dct_fn_read_file,
     dct_fn_write_file,
     dct_fn_fetch_event_from_url,
     dct_fn_load_json,
     dct_fn_write_json,
     dct_fn_parse_html_file,
+    # Nuove funzioni viaggio
+    dct_fn_search_flights,
+    dct_fn_search_hotels,
+    dct_fn_search_events,
+    dct_fn_get_weather_forecast
 ]

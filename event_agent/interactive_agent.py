@@ -8,21 +8,30 @@ from event_agent.agent_functions import (
     read_file,
     load_json,
     write_json,
-    # parse_html_file,
+    parse_html_file,
     fetch_event_from_url,
-    list_events_by_query
+    list_events_by_query,
+    search_events,
+    search_flights,
+    search_hotels,
+    get_weather_forecast
 )
 
 logger = logging.getLogger(__name__)
 
 FUNCTION_DISPATCHER = {
     # "parse_html_file": parse_html_file,
-    "write_file": write_file,
-    "read_file": read_file,
-    "load_json": load_json,
-    "write_json": write_json,
-    "fetch_event_from_url": fetch_event_from_url,
-    "list_events_by_query": list_events_by_query
+    # "write_file": write_file,
+    # "read_file": read_file,
+    # "load_json": load_json,
+    # "write_json": write_json,
+    # "fetch_event_from_url": fetch_event_from_url,
+    # "list_events_by_query": list_events_by_query,
+    # new functions
+    "search_flights": search_flights,
+    "search_hotels": search_hotels,
+    "search_events": search_events,
+    "get_weather_forecast": get_weather_forecast
 }
 
 
@@ -31,16 +40,14 @@ class EventbriteAgent:
         self.chat_history = []
         logger.info("🤖 Avvio di Eventbrite Agent...")
 
-        initial_prompt = f"""
-            Sei un assistente tecnico. 
-            Il tuo compito è di elaborare le informazioni da un file HTML
-            
-            - trovare URL di Eventbrite di eventi in relazione con la richiesta dell'utente 
-            - recuperare informazioni da Eventbrite API se ti viene passato un URL
-
-            Dopo l'elaborazione, l'utente potrà farti domande su:
-            - struttura del file HTML
-            - informazioni principali relative al contenuto del file e all'evento
+        initial_prompt = """
+            Sei un assistente viaggi intelligente.
+            Il tuo compito è:
+                - proporre soluzioni di trasporto (voli, treni, autobus) per la tratta richiesta dall'utente
+                - proporre alloggi disponibili nelle date indicate
+                - mostrare previsioni del tempo per le date e la destinazione
+                - suggerire eventi, attrazioni o attività interessanti nella città
+            Rispondi in maniera chiara e sintetica, in italiano.
         """
 
         response = chat_functions(
@@ -52,21 +59,6 @@ class EventbriteAgent:
         self.chat_history.append(message)
 
         self._handle_functions(message)
-
-    @staticmethod
-    def print_event(event):
-        logger.info("\n---------------------------")
-
-        logger.info(f"Titolo: {event.title}")
-        logger.info(f"Data: {event.date}")
-        logger.info(f"URL: {event.url}")
-        logger.info(f"Location: {event.location.name}, {event.location.address}")
-        logger.info(f"Categoria: {', '.join(event.categories)}")
-        logger.info(
-            f"Description: {event.description[:150]}..." if event.description else "No description"
-        )
-
-        logger.info("---------------------------\n")
 
     def _handle_functions(self, message):
         while message.get("function_call"):
@@ -95,24 +87,6 @@ class EventbriteAgent:
                 logger.warning(f"❌ Funzione non gestita: {fname}")
                 break
 
-    def fetch_event(self, url: str):
-        """Fetch single event by URL"""
-        try:
-            event = fetch_event_from_url(url)
-            self.chat_history.append({"role": "system", "content": f"Fetched event {event.title}"})
-            self.print_event(event)
-        except Exception as e:
-            logger.error(f"Errore nel fetch dell'evento: {e}")
-
-    def search_events(self, query: str, location: str = "Torino"):
-        """Search events by query"""
-        try:
-            events = list_events_by_query(query, location)
-            for event in events:
-                self.print_event(event)
-        except Exception as e:
-            logger.error(f"Errore nella ricerca eventi: {e}")
-
     def ask(self, user_input):
         self.chat_history.append({"role": "user", "content": user_input})
 
@@ -136,4 +110,4 @@ def run_eventbrite_agent():
         user_input = input("❓ Inserisci URL evento o 'exit' per uscire: ")
         if user_input.lower() == "exit":
             break
-        agent.fetch_event(user_input)
+        agent.ask(user_input)
