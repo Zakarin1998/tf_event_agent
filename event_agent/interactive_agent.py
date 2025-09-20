@@ -86,6 +86,8 @@ class EventbriteAgent:
             else:
                 logger.warning(f"❌ Funzione non gestita: {fname}")
                 break
+        # ritorna SEMPRE l’ultimo message (anche se è content)
+        return message
 
     def ask(self, user_input):
         self.chat_history.append({"role": "user", "content": user_input})
@@ -99,7 +101,8 @@ class EventbriteAgent:
         self.chat_history.append(message)
 
         if message.get("function_call"):
-            self._handle_functions(message)
+            message = self._handle_functions(message)
+            logger.info("⚙️🗨️ %s", message.get("content"))
         else:
             logger.info("🗨️ %s", message.get("content"))
 
